@@ -2,6 +2,9 @@
 
 # Go library for the Paystack API.
 
+> Fork of rpip/paystack-go. Not actively maintained, just forked to clean up things like 
+auto logging and bumping go versions
+
 paystack-go is a Go client library for accessing the Paystack API.
 
 Where possible, the services available on the client groups the API into logical chunks and correspond to the structure of the Paystack API documentation at https://developers.paystack.co/v1.0/reference.
