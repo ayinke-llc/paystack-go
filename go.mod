@@ -1,4 +1,4 @@
-module github.com/rpip/paystack-go
+module github.com/ayinke-llc/paystack-go
 
 go 1.25.4
 
