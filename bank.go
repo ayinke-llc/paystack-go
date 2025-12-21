@@ -35,6 +35,13 @@ type BVNResponse struct {
 	BVN string
 }
 
+// AccountNumberResponse represents response from resolve account number endpoint
+type AccountNumberResponse struct {
+	AccountNumber string `json:"account_number,omitempty"`
+	AccountName   string `json:"account_name,omitempty"`
+	BankID        int    `json:"bank_id,omitempty"`
+}
+
 // List returns a list of all the banks.
 // For more details see https://developers.paystack.co/v1.0/reference#list-banks
 func (s *BankService) List() (*BankList, error) {
@@ -52,9 +59,9 @@ func (s *BankService) ResolveBVN(bvn int) (*BVNResponse, error) {
 }
 
 // ResolveAccountNumber docs https://developers.paystack.co/v1.0/reference#resolve-account-number
-func (s *BankService) ResolveAccountNumber(accountNumber, bankCode string) (Response, error) {
+func (s *BankService) ResolveAccountNumber(accountNumber, bankCode string) (*AccountNumberResponse, error) {
 	u := fmt.Sprintf("/bank/resolve?account_number=%s&bank_code=%s", accountNumber, bankCode)
-	resp := Response{}
-	err := s.client.Call("GET", u, nil, &resp)
+	resp := &AccountNumberResponse{}
+	err := s.client.Call("GET", u, nil, resp)
 	return resp, err
 }
