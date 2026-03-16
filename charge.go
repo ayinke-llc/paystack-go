@@ -1,8 +1,11 @@
 package paystack
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
+
+	"github.com/ayinke-llc/hermes"
 )
 
 // ChargeService handles operations related to bulk charges
@@ -39,6 +42,36 @@ type ChargeRequest struct {
 	AuthorizationCode string       `json:"authorization_code,omitempty"`
 	Pin               string       `json:"pin,omitempty"`
 	Metadata          *Metadata    `json:"metadata,omitempty"`
+}
+
+type ChargeAuthorizationRequest struct {
+	Email             string    `json:"email,omitempty"`
+	Reference         string    `json:"reference,omitempty"`
+	AuthorizationCode string    `json:"authorization_code,omitempty"`
+	Currency          string    `json:"currency,omitempty"`
+	Metadata          *Metadata `json:"metadata,omitempty"`
+	Queue             bool      `json:"queue,omitempty"`
+}
+
+// ChargeAuthorization allows you charge a user existing card details via the authorization code
+// For more details see https://paystack.com/docs/api/transaction/#charge-authorization
+func (s *ChargeService) ChargeAuthorization(req *ChargeAuthorizationRequest) (Response, error) {
+	if hermes.IsStringEmpty(req.Currency) {
+		req.Currency = "NGN"
+	}
+
+	resp := Response{}
+
+	if hermes.IsStringEmpty(req.AuthorizationCode) {
+		return resp, errors.New("authorization code is required")
+	}
+
+	if hermes.IsStringEmpty(req.Email) {
+		return resp, errors.New("email is required")
+	}
+
+	err := s.client.Call("POST", "/transaction/charge_authorization", req, &resp)
+	return resp, err
 }
 
 // Create submits a charge request using card details or bank details or authorization code
